@@ -17,12 +17,12 @@ export default function Card({
 }: Props) {
   return (
     <div
-      className={`bg-white border-2 border-gray-300 rounded-sm shadow-md ${className}`}
+      className={`bg-white border-4 border-black rounded-sm shadow-[5px_5px_0_rgba(0,0,0,0.35)] ${className}`}
     >
       {title && (
-        <div className="flex items-center justify-between px-5 py-3 border-b-2 border-gray-200 bg-gradient-to-b from-gray-50 to-gray-100">
-          <h3 className="text-xs font-black text-gray-800 uppercase tracking-[0.15em]">
-            {title}
+        <div className="flex items-center justify-between px-5 py-3 border-b-4 border-black bg-gradient-to-r from-yellow-200 via-pink-200 to-purple-200">
+          <h3 className="text-xs font-black text-gray-900 uppercase tracking-[0.2em] italic">
+            ★ {title}
           </h3>
           {action}
         </div>

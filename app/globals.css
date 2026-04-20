@@ -4,27 +4,116 @@
 
 html,
 body {
-  background-color: #eef1e8;
-  color: #2b2b2b;
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #fdf6e3;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgba(0, 0, 0, 0.03) 0,
+      rgba(0, 0, 0, 0.03) 2px,
+      transparent 2px,
+      transparent 12px
+    ),
+    linear-gradient(180deg, #fdf6e3 0%, #e0f7fa 100%);
+  color: #1a1a1a;
+  font-family: "Trebuchet MS", Tahoma, Verdana, sans-serif;
 }
 
 h1,
 h2,
 h3 {
-  font-family: Georgia, "Times New Roman", serif;
-  letter-spacing: -0.01em;
+  font-family: Impact, "Arial Black", Georgia, serif;
+  letter-spacing: 0.01em;
+  text-transform: none;
 }
 
-/* Generic scrollbar — intentionally default-ish */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: #9ca3af #e5e7eb;
+a {
+  text-decoration: underline;
+  text-decoration-color: #2563eb;
 }
 
-/* Slightly over-designed button shine */
+a.no-underline,
+a.nav-link,
+nav a,
+button a,
+a:has(> button),
+.btn-shine,
+a.btn,
+.unstyled-link {
+  text-decoration: none;
+}
+
+/* Skeuomorphic shine */
 .btn-shine {
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.35),
-    0 2px 0 rgba(0, 0, 0, 0.08);
+    inset 0 2px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.18),
+    0 3px 0 rgba(0, 0, 0, 0.15),
+    0 6px 12px rgba(0, 0, 0, 0.18);
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.rainbow-text {
+  background: linear-gradient(
+    90deg,
+    #ef4444,
+    #f97316,
+    #eab308,
+    #22c55e,
+    #06b6d4,
+    #6366f1,
+    #a855f7,
+    #ec4899
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.ugly-stripes {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    #fef3c7 0,
+    #fef3c7 20px,
+    #fff7ed 20px,
+    #fff7ed 40px
+  );
+}
+
+.ugly-shadow {
+  box-shadow: 6px 6px 0 rgba(236, 72, 153, 0.7);
+}
+
+.blink {
+  animation: blink 1s steps(1, end) infinite;
+}
+@keyframes blink {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.marquee {
+  white-space: nowrap;
+  overflow: hidden;
+  position: relative;
+}
+.marquee > span {
+  display: inline-block;
+  padding-left: 100%;
+  animation: marquee 22s linear infinite;
+}
+@keyframes marquee {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-100%, 0);
+  }
+}
+
+/* Tacky scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #a855f7 #fef3c7;
 }

@@ -1,51 +1,63 @@
 const features = [
   {
-    title: "Deployment monitoring",
+    title: "Deployment Monitoring!",
     description:
       "Real-time status across every environment, with rollback in one click when something slips through.",
     icon: "🚀",
-    color: "bg-orange-100 border-orange-400",
-    badge: "bg-orange-500",
+    bg: "bg-orange-200",
+    border: "border-orange-600",
+    badgeBg: "bg-gradient-to-br from-orange-400 to-red-600",
+    badgeRing: "ring-yellow-300",
   },
   {
-    title: "Incident tracking",
+    title: "Incident Tracking!",
     description:
       "Capture, triage, and resolve incidents alongside the deployments that caused them.",
     icon: "⚠️",
-    color: "bg-red-100 border-red-400",
-    badge: "bg-red-500",
+    bg: "bg-red-100",
+    border: "border-red-600",
+    badgeBg: "bg-gradient-to-br from-pink-400 to-red-700",
+    badgeRing: "ring-yellow-300",
   },
   {
-    title: "Environment management",
+    title: "Environments!",
     description:
       "Promote builds from preview to staging to production with consistent configs.",
     icon: "🧭",
-    color: "bg-teal-100 border-teal-400",
-    badge: "bg-teal-500",
+    bg: "bg-teal-100",
+    border: "border-teal-600",
+    badgeBg: "bg-gradient-to-br from-cyan-300 to-teal-700",
+    badgeRing: "ring-pink-300",
   },
   {
-    title: "Team activity feed",
+    title: "Team Activity!",
     description:
       "See who shipped what, when, and why — without digging through Slack threads.",
     icon: "👥",
-    color: "bg-pink-100 border-pink-400",
-    badge: "bg-pink-500",
+    bg: "bg-pink-100",
+    border: "border-pink-600",
+    badgeBg: "bg-gradient-to-br from-pink-400 to-fuchsia-700",
+    badgeRing: "ring-yellow-300",
   },
   {
-    title: "Unified logs",
+    title: "Unified Logs!",
     description:
       "Stream logs from every service into one searchable view, with level-based filtering.",
     icon: "📄",
-    color: "bg-yellow-100 border-yellow-500",
-    badge: "bg-yellow-500",
+    bg: "bg-yellow-100",
+    border: "border-yellow-600",
+    badgeBg: "bg-gradient-to-br from-yellow-300 to-orange-600",
+    badgeRing: "ring-purple-400",
   },
   {
-    title: "Granular permissions",
+    title: "Permissions!",
     description:
       "Role-based access controls per project and environment, with audit trails built in.",
     icon: "🔒",
-    color: "bg-indigo-100 border-indigo-400",
-    badge: "bg-indigo-500",
+    bg: "bg-purple-100",
+    border: "border-purple-600",
+    badgeBg: "bg-gradient-to-br from-indigo-400 to-purple-700",
+    badgeRing: "ring-lime-300",
   },
 ];
 
@@ -53,45 +65,51 @@ export default function Features() {
   return (
     <section
       id="features"
-      className="py-20 bg-[#eef1e8] border-t-4 border-b-4 border-indigo-700"
+      className="py-20 ugly-stripes border-t-8 border-b-8 border-pink-600 relative"
     >
-      <div className="max-w-6xl mx-auto px-6">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(236,72,153,0.15),transparent_50%)]" />
+      <div className="relative max-w-6xl mx-auto px-6">
         <div className="text-center mb-14">
-          <p className="text-sm font-black text-orange-600 uppercase tracking-[0.25em]">
-            ✦ Features ✦
+          <p className="text-xs font-black text-red-600 uppercase tracking-[0.4em] blink">
+            ✦✦✦ FEATURES ✦✦✦
           </p>
-          <h2 className="mt-3 text-4xl font-black text-gray-900">
-            Everything you need to ship with confidence
+          <h2 className="mt-3 text-5xl font-black [text-shadow:3px_3px_0_rgba(236,72,153,0.7)]">
+            Everything You Need to{" "}
+            <span className="rainbow-text [text-shadow:none]">SHIP FASTER!!</span>
           </h2>
-          <p className="mt-3 text-gray-600 max-w-2xl mx-auto font-sans">
+          <p className="mt-4 text-gray-800 max-w-2xl mx-auto font-sans text-lg">
             Stop stitching together five different tools. DeployFlow brings
-            deployments, incidents, and environments under one roof.
+            deployments, incidents, and environments{" "}
+            <mark className="bg-yellow-300 px-1">under one roof.</mark>
           </p>
-          <div className="mt-4 mx-auto h-1 w-24 bg-gradient-to-r from-orange-500 via-pink-500 to-indigo-600" />
+          <div className="mt-4 mx-auto h-2 w-48 bg-gradient-to-r from-red-500 via-yellow-400 via-green-500 via-cyan-500 to-purple-600 rounded-full" />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((f, i) => (
             <div
               key={f.title}
-              className={`border-2 ${i % 2 === 0 ? "rounded-lg" : "rounded"} p-6 bg-white shadow-md hover:shadow-xl transition-shadow ${f.color}`}
+              className={`border-4 ${i % 3 === 0 ? "rounded-2xl" : i % 3 === 1 ? "rounded-none" : "rounded"} p-6 ${f.bg} ${f.border} ugly-shadow hover:translate-x-[-2px] hover:translate-y-[-2px] transition-transform relative`}
             >
+              <div className="absolute -top-3 -right-3 bg-red-500 text-white text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rotate-6 border-2 border-white shadow">
+                NEW!
+              </div>
               <div
-                className={`h-14 w-14 ${i % 3 === 0 ? "rounded-full" : "rounded-md"} ${f.badge} flex items-center justify-center text-2xl mb-4 border-2 border-white shadow-md`}
+                className={`h-16 w-16 rounded-full ${f.badgeBg} flex items-center justify-center text-3xl mb-4 border-4 border-white ring-4 ${f.badgeRing} shadow-lg`}
               >
                 {f.icon}
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
+              <h3 className="text-2xl font-black text-gray-900 mb-2 italic">
                 {f.title}
               </h3>
-              <p className="text-sm text-gray-700 leading-relaxed font-sans">
+              <p className="text-sm text-gray-800 leading-relaxed font-sans">
                 {f.description}
               </p>
               <a
                 href="#"
-                className="mt-4 inline-block text-xs font-black uppercase tracking-widest text-indigo-700 hover:text-orange-600"
+                className="mt-4 inline-block text-sm font-black uppercase tracking-widest text-red-600 hover:text-purple-700"
               >
-                Learn more →
+                ➜ Learn More!
               </a>
             </div>
           ))}

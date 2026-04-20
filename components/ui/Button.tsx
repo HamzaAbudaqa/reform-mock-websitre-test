@@ -17,13 +17,13 @@ interface Props {
 
 const variantStyles: Record<Variant, string> = {
   primary:
-    "bg-gradient-to-b from-indigo-500 to-indigo-700 text-white border-2 border-indigo-800 uppercase tracking-wider font-bold btn-shine hover:from-indigo-600 hover:to-indigo-800",
+    "bg-gradient-to-b from-pink-400 via-fuchsia-600 to-purple-700 text-white border-4 border-yellow-300 uppercase tracking-widest font-black btn-shine italic",
   secondary:
-    "bg-gradient-to-b from-white to-gray-100 text-gray-800 border-2 border-gray-400 uppercase tracking-wider font-bold hover:from-gray-50 hover:to-gray-200",
+    "bg-gradient-to-b from-yellow-200 to-orange-400 text-gray-900 border-4 border-red-600 uppercase tracking-widest font-black btn-shine italic",
   ghost:
-    "bg-transparent text-indigo-700 hover:underline hover:bg-transparent border-2 border-transparent uppercase tracking-wider font-bold",
+    "bg-white text-purple-700 border-4 border-purple-700 uppercase tracking-widest font-black btn-shine italic",
   danger:
-    "bg-gradient-to-b from-red-500 to-red-700 text-white border-2 border-red-800 uppercase tracking-wider font-bold btn-shine",
+    "bg-gradient-to-b from-red-400 to-red-800 text-white border-4 border-yellow-300 uppercase tracking-widest font-black btn-shine italic",
 };
 
 const sizeStyles: Record<Size, string> = {
@@ -42,7 +42,7 @@ export default function Button({
   className = "",
   onClick,
 }: Props) {
-  const classes = `inline-flex items-center justify-center gap-2 rounded-sm transition-colors ${variantStyles[variant]} ${sizeStyles[size]} ${fullWidth ? "w-full" : ""} ${className}`;
+  const classes = `inline-flex items-center justify-center gap-2 rounded-sm transition-transform hover:translate-y-[-1px] active:translate-y-[1px] ${variantStyles[variant]} ${sizeStyles[size]} ${fullWidth ? "w-full" : ""} ${className} unstyled-link`;
 
   if (href) {
     return (
