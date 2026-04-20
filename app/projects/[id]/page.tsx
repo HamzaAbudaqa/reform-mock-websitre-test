@@ -39,281 +39,399 @@ export default function ProjectDetailPage({ params, searchParams }: Params) {
   );
 
   return (
-    <>
-      <Header
-        title={project.name}
-        subtitle={project.description}
-        action={
-          <div className="flex items-center gap-2">
-            <Button variant="secondary" size="sm">Rollback</Button>
-            <Button size="sm">Deploy</Button>
+    <div className="flex flex-col min-h-screen">
+      {/* ── Page Header ── */}
+      <header className="bg-white border-b border-[#ddd] px-6 py-4">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1 min-w-0">
+            <h1 className="text-xl font-bold text-[#333] leading-tight">{project.name}</h1>
+            {project.description && (
+              <p className="text-sm text-[#777] mt-1">{project.description}</p>
+            )}
           </div>
-        }
-      />
-
-      <main className="flex-1 p-4 bg-[#f5f5f5] overflow-auto">
-        <div className="bg-white border border-[#ddd] rounded-[3px] px-4 py-3 mb-4 flex flex-wrap items-center gap-3">
-          <Badge tone={statusTone(project.status)}>{project.status}</Badge>
-          <span className="text-xs text-[#777]">
-            {project.framework} · Owned by {project.owner} ({project.team})
-          </span>
-          <span className="text-xs text-[#777]">
-            Uptime {project.uptime} · {project.deploymentsThisWeek} deploys this week
-          </span>
-        </div>
-
-        <div className="border-b border-[#ddd] mb-4 bg-white">
-          <nav className="flex gap-0">
-            {TABS.map((t) => (
-              <Link
-                key={t}
-                href={`/projects/${project.slug}?tab=${t}`}
-                className={`text-sm py-2 px-4 capitalize border-b-2 no-underline ${
-                  tab === t
-                    ? "border-[#337ab7] text-[#337ab7] font-bold"
-                    : "border-transparent text-[#555] hover:text-[#333]"
-                }`}
-              >
-                {t}
-              </Link>
-            ))}
-          </nav>
-        </div>
-
-        {tab === "overview" && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <div className="lg:col-span-2 space-y-4">
-              <Card title="Deployment timeline" padded={false}>
-                <ul>
-                  {projectDeploys.length === 0 && (
-                    <li className="px-4 py-3 text-sm text-[#777]">
-                      No deployments yet.
-                    </li>
-                  )}
-                  {projectDeploys.map((d, i) => (
-                    <li
-                      key={d.id}
-                      className={`px-4 py-2.5 flex items-center justify-between border-t border-[#eee] ${i === 0 ? "border-t-0" : ""}`}
-                    >
-                      <div>
-                        <p className="text-sm text-[#333]">
-                          <span className="font-mono text-xs text-[#666]">{d.commit}</span>
-                          {"  "}{d.message}
-                        </p>
-                        <p className="text-xs text-[#777]">
-                          {d.author} · {d.branch} · {d.timestamp}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <Badge tone="gray">{d.environment}</Badge>
-                        <Badge tone={statusTone(d.status)}>{d.status}</Badge>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </Card>
-
-              <Card title="Recent alerts" padded={false}>
-                {projectIncidents.length === 0 ? (
-                  <div className="px-4 py-4 text-sm text-[#777]">
-                    No recent alerts for this project.
-                  </div>
-                ) : (
-                  <ul>
-                    {projectIncidents.map((i, idx) => (
-                      <li
-                        key={i.id}
-                        className={`px-4 py-2.5 flex items-center justify-between border-t border-[#eee] ${idx === 0 ? "border-t-0" : ""}`}
-                      >
-                        <div>
-                          <p className="text-sm text-[#333]">{i.title}</p>
-                          <p className="text-xs text-[#777]">
-                            Opened {i.openedAt} · {i.assignee}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <Badge tone={statusTone(i.severity)}>{i.severity}</Badge>
-                          <Badge tone={statusTone(i.status)}>{i.status}</Badge>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </Card>
+          <div className="flex items-center gap-3 shrink-0">
+            <input
+              type="text"
+              placeholder="Search deployments, projects..."
+              className="hidden md:block w-64 rounded-[3px] border border-[#ccc] bg-white px-3 py-1.5 text-sm text-[#333] placeholder-[#999] focus:outline-none focus:border-[#337ab7]"
+            />
+            <button
+              type="button"
+              className="text-sm text-[#777] hover:text-[#d9534f] border border-[#ccc] hover:border-[#d9534f] rounded-[3px] px-3 py-1.5 bg-white transition-colors"
+            >
+              Rollback
+            </button>
+            <Button size="md">Deploy now</Button>
+            <div className="h-8 w-8 rounded-full bg-[#777] flex items-center justify-center text-[11px] font-bold text-white">
+              HD
             </div>
+          </div>
+        </div>
+      </header>
 
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-3">
-                <div className="bg-white border border-[#ddd] rounded-[3px] p-3">
-                  <p className="text-xs text-[#777]">Uptime (30d)</p>
-                  <p className="text-lg font-bold text-[#333] mt-0.5">
-                    {project.uptime}
-                  </p>
+      {/* ── Project Meta Bar ── */}
+      <section className="bg-white border-b border-[#ddd] px-6 py-3">
+        <div className="flex flex-wrap items-center gap-6">
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] uppercase font-bold text-[#999] tracking-wide">Status</span>
+            <Badge tone={statusTone(project.status)}>{project.status}</Badge>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] uppercase font-bold text-[#999] tracking-wide">Framework</span>
+            <span className="text-sm text-[#555]">{project.framework}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] uppercase font-bold text-[#999] tracking-wide">Owner</span>
+            <span className="text-sm text-[#555]">{project.owner}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] uppercase font-bold text-[#999] tracking-wide">Team</span>
+            <span className="text-sm text-[#555]">{project.team}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] uppercase font-bold text-[#999] tracking-wide">Uptime</span>
+            <span className="text-sm font-bold text-[#5cb85c]">{project.uptime}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] uppercase font-bold text-[#999] tracking-wide">Deploys/wk</span>
+            <span className="text-sm text-[#555]">{project.deploymentsThisWeek}</span>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Tab Navigation ── */}
+      <nav className="bg-white border-b border-[#ddd] px-6">
+        <div className="flex gap-0">
+          {TABS.map((t) => (
+            <Link
+              key={t}
+              href={`/projects/${project.slug}?tab=${t}`}
+              className={`text-sm py-3 px-5 capitalize border-b-[3px] no-underline transition-colors ${
+                tab === t
+                  ? "border-[#337ab7] text-[#337ab7] font-bold bg-[#f0f7ff]"
+                  : "border-transparent text-[#555] hover:text-[#333] hover:bg-[#f5f5f5]"
+              }`}
+            >
+              {t}
+            </Link>
+          ))}
+        </div>
+      </nav>
+
+      {/* ── Main Content ── */}
+      <main className="flex-1 bg-[#f5f5f5] overflow-auto">
+
+        {/* ── OVERVIEW TAB ── */}
+        {tab === "overview" && (
+          <div className="p-6 space-y-6">
+
+            {/* Stats row */}
+            <section>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="bg-white border border-[#ddd] rounded-[3px] p-5">
+                  <p className="text-[10px] uppercase font-bold text-[#999] tracking-wide">Uptime (30d)</p>
+                  <p className="text-3xl font-bold text-[#5cb85c] mt-2">{project.uptime}</p>
                 </div>
-                <div className="bg-white border border-[#ddd] rounded-[3px] p-3">
-                  <p className="text-xs text-[#777]">Deploys / wk</p>
-                  <p className="text-lg font-bold text-[#333] mt-0.5">
-                    {project.deploymentsThisWeek}
-                  </p>
+                <div className="bg-white border border-[#ddd] rounded-[3px] p-5">
+                  <p className="text-[10px] uppercase font-bold text-[#999] tracking-wide">Deploys / week</p>
+                  <p className="text-3xl font-bold text-[#333] mt-2">{project.deploymentsThisWeek}</p>
                 </div>
-                <div className="bg-white border border-[#ddd] rounded-[3px] p-3">
-                  <p className="text-xs text-[#777]">Avg deploy</p>
-                  <p className="text-lg font-bold text-[#333] mt-0.5">1m 42s</p>
+                <div className="bg-white border border-[#ddd] rounded-[3px] p-5">
+                  <p className="text-[10px] uppercase font-bold text-[#999] tracking-wide">Avg deploy time</p>
+                  <p className="text-3xl font-bold text-[#333] mt-2">1m 42s</p>
                 </div>
-                <div className="bg-white border border-[#ddd] rounded-[3px] p-3">
-                  <p className="text-xs text-[#777]">Open incidents</p>
-                  <p className="text-lg font-bold text-[#333] mt-0.5">
+                <div className="bg-white border border-[#ddd] rounded-[3px] p-5">
+                  <p className="text-[10px] uppercase font-bold text-[#999] tracking-wide">Open incidents</p>
+                  <p className={`text-3xl font-bold mt-2 ${
+                    projectIncidents.filter((i) => i.status !== "resolved").length > 0
+                      ? "text-[#d9534f]"
+                      : "text-[#333]"
+                  }`}>
                     {projectIncidents.filter((i) => i.status !== "resolved").length}
                   </p>
                 </div>
               </div>
+            </section>
 
-              <Card title="Environment variables" padded={false}>
-                <ul className="text-sm">
-                  {projectEnvVars.slice(0, 6).map((v, i) => (
-                    <li
-                      key={`${v.key}-${v.environment}`}
-                      className={`px-4 py-2 flex items-center justify-between gap-3 border-t border-[#eee] ${i === 0 ? "border-t-0" : ""}`}
-                    >
-                      <div className="min-w-0">
-                        <p className="font-mono text-xs text-[#333] truncate">
-                          {v.key}
-                        </p>
-                        <p className="font-mono text-xs text-[#777] truncate">
-                          {v.value}
-                        </p>
-                      </div>
-                      <Badge tone="gray">{v.environment}</Badge>
-                    </li>
-                  ))}
-                </ul>
-                <div className="px-4 py-2 border-t border-[#eee]">
-                  <a href="#" className="text-xs text-[#337ab7] hover:underline">
-                    Manage all variables
-                  </a>
+            {/* Two-column content */}
+            <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+              {/* Left: timeline + alerts */}
+              <div className="lg:col-span-2 space-y-6">
+
+                {/* Deployment timeline */}
+                <div className="bg-white border border-[#ddd] rounded-[3px]">
+                  <div className="flex items-center justify-between px-5 py-3 border-b border-[#ddd] bg-[#f5f5f5]">
+                    <h3 className="text-sm font-bold text-[#333]">Deployment timeline</h3>
+                  </div>
+                  {projectDeploys.length === 0 ? (
+                    <div className="px-5 py-10 text-center">
+                      <p className="text-sm text-[#999]">No deployments yet.</p>
+                      <p className="text-xs text-[#bbb] mt-1">Push a commit to trigger your first deploy.</p>
+                    </div>
+                  ) : (
+                    <ul className="divide-y divide-[#eee]">
+                      {projectDeploys.map((d) => (
+                        <li key={d.id} className="px-5 py-4 flex items-start justify-between gap-4">
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm text-[#333]">
+                              <span className="font-mono text-xs text-[#666] bg-[#f5f5f5] px-1.5 py-0.5 rounded mr-2">{d.commit}</span>
+                              {d.message}
+                            </p>
+                            <p className="text-xs text-[#777] mt-1.5">
+                              {d.author} · {d.branch} · {d.timestamp}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-2 shrink-0">
+                            <Badge tone="gray">{d.environment}</Badge>
+                            <Badge tone={statusTone(d.status)}>
+                              {d.status === "success" && "✓ "}{d.status === "failed" && "✕ "}{d.status === "building" && "⟳ "}{d.status}
+                            </Badge>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
-              </Card>
-            </div>
+
+                {/* Recent alerts */}
+                <div className="bg-white border border-[#ddd] rounded-[3px]">
+                  <div className="flex items-center justify-between px-5 py-3 border-b border-[#ddd] bg-[#f5f5f5]">
+                    <h3 className="text-sm font-bold text-[#333]">Recent alerts</h3>
+                  </div>
+                  {projectIncidents.length === 0 ? (
+                    <div className="px-5 py-10 text-center">
+                      <p className="text-sm text-[#999]">No recent alerts for this project.</p>
+                    </div>
+                  ) : (
+                    <ul className="divide-y divide-[#eee]">
+                      {projectIncidents.map((i) => (
+                        <li key={i.id} className="px-5 py-4 flex items-start justify-between gap-4">
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm text-[#333]">{i.title}</p>
+                            <p className="text-xs text-[#777] mt-1.5">
+                              Opened {i.openedAt} · {i.assignee}
+                            </p>
+                          </div>
+                          <div className="flex flex-col items-end gap-1.5 shrink-0">
+                            <Badge tone={statusTone(i.status)}>{i.status}</Badge>
+                            <Badge tone={statusTone(i.severity)}>{i.severity}</Badge>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
+
+              {/* Right: env vars */}
+              <aside className="space-y-6">
+                <div className="bg-white border border-[#ddd] rounded-[3px]">
+                  <div className="flex items-center justify-between px-5 py-3 border-b border-[#ddd] bg-[#f5f5f5]">
+                    <h3 className="text-sm font-bold text-[#333]">Environment variables</h3>
+                  </div>
+                  <ul className="divide-y divide-[#eee]">
+                    {projectEnvVars.slice(0, 6).map((v) => (
+                      <li
+                        key={`${v.key}-${v.environment}`}
+                        className="px-5 py-3 flex items-center justify-between gap-3"
+                      >
+                        <div className="min-w-0 flex-1">
+                          <p className="font-mono text-xs text-[#333] truncate font-bold">{v.key}</p>
+                          <p className="font-mono text-xs text-[#999] mt-0.5 tracking-widest">••••••••</p>
+                        </div>
+                        <Badge tone="gray">{v.environment}</Badge>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="px-5 py-3 border-t border-[#eee]">
+                    <Link href={`/projects/${project.slug}?tab=settings`} className="text-xs text-[#337ab7] hover:underline">
+                      Manage all variables →
+                    </Link>
+                  </div>
+                </div>
+              </aside>
+            </section>
           </div>
         )}
 
+        {/* ── DEPLOYMENTS TAB ── */}
         {tab === "deployments" && (
-          <Card title="All deployments" padded={false}>
-            <table className="w-full text-sm">
-              <thead className="bg-[#f9f9f9] text-[11px] uppercase text-[#777]">
-                <tr>
-                  <th className="text-left px-4 py-1.5 font-normal">Commit</th>
-                  <th className="text-left px-4 py-1.5 font-normal">Message</th>
-                  <th className="text-left px-4 py-1.5 font-normal">Env</th>
-                  <th className="text-left px-4 py-1.5 font-normal">Status</th>
-                  <th className="text-left px-4 py-1.5 font-normal">Duration</th>
-                  <th className="text-left px-4 py-1.5 font-normal">When</th>
-                </tr>
-              </thead>
-              <tbody>
-                {projectDeploys.map((d, i) => (
-                  <tr
-                    key={d.id}
-                    className={`border-t border-[#eee] ${i % 2 === 1 ? "bg-[#f9f9f9]" : ""}`}
-                  >
-                    <td className="px-4 py-2 font-mono text-xs text-[#666]">
-                      {d.commit}
-                    </td>
-                    <td className="px-4 py-2 text-[#333]">{d.message}</td>
-                    <td className="px-4 py-2 text-[#555]">{d.environment}</td>
-                    <td className="px-4 py-2">
-                      <Badge tone={statusTone(d.status)}>{d.status}</Badge>
-                    </td>
-                    <td className="px-4 py-2 text-[#555]">{d.duration}</td>
-                    <td className="px-4 py-2 text-xs text-[#777]">
-                      {d.timestamp}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </Card>
-        )}
-
-        {tab === "logs" && (
-          <Card title="Service logs" padded={false}>
-            <div className="bg-[#2b2b2b] text-[#ddd] font-mono text-xs p-3 max-h-[500px] overflow-auto">
-              {Array.from({ length: 30 }).map((_, i) => (
-                <div key={i} className="flex gap-2 py-0.5">
-                  <span className="text-[#999]">
-                    10:4{(i % 10).toString()}:{(i * 3) % 60}
-                  </span>
-                  <span className="uppercase w-10 text-[#5bc0de]">info</span>
-                  <span className="text-[#5bc0de]">[{project.slug}]</span>
-                  <span>
-                    {i % 7 === 0
-                      ? `Handled request ${i * 11} in ${42 + (i % 5)}ms`
-                      : `Worker tick — queue depth ${i % 9}, flush lag ${i}ms`}
-                  </span>
+          <div className="p-6">
+            <div className="bg-white border border-[#ddd] rounded-[3px]">
+              <div className="flex items-center justify-between px-5 py-3 border-b border-[#ddd] bg-[#f5f5f5]">
+                <h3 className="text-sm font-bold text-[#333]">All deployments</h3>
+                <span className="text-xs text-[#777]">{projectDeploys.length} total</span>
+              </div>
+              {projectDeploys.length === 0 ? (
+                <div className="px-5 py-16 text-center">
+                  <p className="text-base font-bold text-[#555]">No deployments yet</p>
+                  <p className="text-sm text-[#999] mt-2">Push a commit or trigger a manual deploy to get started.</p>
+                  <div className="mt-6">
+                    <Button size="md">Deploy now</Button>
+                  </div>
                 </div>
-              ))}
+              ) : (
+                <table className="w-full text-sm">
+                  <thead className="bg-[#f9f9f9] text-[11px] uppercase text-[#777]">
+                    <tr>
+                      <th className="text-left px-5 py-2.5 font-bold">Commit</th>
+                      <th className="text-left px-5 py-2.5 font-bold">Message</th>
+                      <th className="text-left px-5 py-2.5 font-bold">Env</th>
+                      <th className="text-left px-5 py-2.5 font-bold">Status</th>
+                      <th className="text-left px-5 py-2.5 font-bold">Duration</th>
+                      <th className="text-left px-5 py-2.5 font-bold">When</th>
+                      <th className="text-right px-5 py-2.5 font-bold">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#eee]">
+                    {projectDeploys.map((d) => (
+                      <tr key={d.id} className="hover:bg-[#fafafa] transition-colors">
+                        <td className="px-5 py-3 font-mono text-xs text-[#666] bg-[#f5f5f5] rounded">
+                          {d.commit}
+                        </td>
+                        <td className="px-5 py-3 text-[#333]">{d.message}</td>
+                        <td className="px-5 py-3 text-[#555]">{d.environment}</td>
+                        <td className="px-5 py-3">
+                          <Badge tone={statusTone(d.status)}>
+                            {d.status === "success" && "✓ "}{d.status === "failed" && "✕ "}{d.status === "building" && "⟳ "}{d.status}
+                          </Badge>
+                        </td>
+                        <td className="px-5 py-3 text-[#555]">{d.duration}</td>
+                        <td className="px-5 py-3 text-xs text-[#777]">{d.timestamp}</td>
+                        <td className="px-5 py-3 text-right">
+                          <button type="button" className="text-xs text-[#337ab7] hover:underline mr-3">Logs</button>
+                          <button type="button" className="text-xs text-[#777] hover:text-[#333] hover:underline">Redeploy</button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
             </div>
-          </Card>
-        )}
-
-        {tab === "settings" && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <Card title="General">
-              <div className="space-y-3">
-                <div>
-                  <label className="text-xs text-[#555]">Project name</label>
-                  <input
-                    defaultValue={project.name}
-                    className="mt-1 w-full rounded-[3px] border border-[#ccc] px-2 py-1 text-sm"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs text-[#555]">Framework</label>
-                  <input
-                    defaultValue={project.framework}
-                    className="mt-1 w-full rounded-[3px] border border-[#ccc] px-2 py-1 text-sm"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs text-[#555]">Owning team</label>
-                  <input
-                    defaultValue={project.team}
-                    className="mt-1 w-full rounded-[3px] border border-[#ccc] px-2 py-1 text-sm"
-                  />
-                </div>
-                <Button size="sm">Save changes</Button>
-              </div>
-            </Card>
-
-            <Card title="Build & deploy">
-              <div className="space-y-3">
-                <div>
-                  <label className="text-xs text-[#555]">Build command</label>
-                  <input
-                    defaultValue="npm run build"
-                    className="mt-1 w-full rounded-[3px] border border-[#ccc] px-2 py-1 text-sm font-mono"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs text-[#555]">Start command</label>
-                  <input
-                    defaultValue="npm run start"
-                    className="mt-1 w-full rounded-[3px] border border-[#ccc] px-2 py-1 text-sm font-mono"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs text-[#555]">Node version</label>
-                  <input
-                    defaultValue="20.x"
-                    className="mt-1 w-full rounded-[3px] border border-[#ccc] px-2 py-1 text-sm"
-                  />
-                </div>
-                <Button size="sm" variant="secondary">Trigger rebuild</Button>
-              </div>
-            </Card>
           </div>
         )}
+
+        {/* ── LOGS TAB ── */}
+        {tab === "logs" && (
+          <div className="p-6">
+            <div className="bg-white border border-[#ddd] rounded-[3px]">
+              <div className="flex items-center justify-between px-5 py-3 border-b border-[#ddd] bg-[#f5f5f5]">
+                <h3 className="text-sm font-bold text-[#333]">Service logs</h3>
+                <span className="text-xs text-[#777]">Live · {project.name}</span>
+              </div>
+              <div className="bg-[#1a1a1a] font-mono text-xs p-5 max-h-[560px] overflow-auto">
+                {Array.from({ length: 30 }).map((_, i) => (
+                  <div key={i} className="flex gap-3 py-1 border-b border-[#2b2b2b]">
+                    <span className="text-[#888] shrink-0 w-16">
+                      10:4{(i % 10).toString()}:{String((i * 3) % 60).padStart(2, "0")}
+                    </span>
+                    <span className="uppercase w-12 shrink-0 text-[#5bc0de] font-bold">info</span>
+                    <span className="text-[#7ec8e3] shrink-0">[{project.slug}]</span>
+                    <span className="text-[#e8e8e8]">
+                      {i % 7 === 0
+                        ? `Handled request ${i * 11} in ${42 + (i % 5)}ms`
+                        : `Worker tick — queue depth ${i % 9}, flush lag ${i}ms`}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── SETTINGS TAB ── */}
+        {tab === "settings" && (
+          <div className="p-6 space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+              {/* General settings */}
+              <section className="bg-white border border-[#ddd] rounded-[3px]">
+                <div className="px-5 py-3 border-b border-[#ddd] bg-[#f5f5f5]">
+                  <h3 className="text-sm font-bold text-[#333]">General</h3>
+                  <p className="text-xs text-[#777] mt-0.5">Basic project information</p>
+                </div>
+                <div className="p-5 space-y-5">
+                  <div>
+                    <label className="block text-xs font-bold text-[#555] mb-1.5">Project name</label>
+                    <input
+                      defaultValue={project.name}
+                      className="w-full rounded-[3px] border border-[#ccc] px-3 py-2 text-sm focus:outline-none focus:border-[#337ab7]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-[#555] mb-1.5">Framework</label>
+                    <input
+                      defaultValue={project.framework}
+                      className="w-full rounded-[3px] border border-[#ccc] px-3 py-2 text-sm focus:outline-none focus:border-[#337ab7]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-[#555] mb-1.5">Owning team</label>
+                    <input
+                      defaultValue={project.team}
+                      className="w-full rounded-[3px] border border-[#ccc] px-3 py-2 text-sm focus:outline-none focus:border-[#337ab7]"
+                    />
+                  </div>
+                  <div className="pt-2">
+                    <Button size="md">Save changes</Button>
+                  </div>
+                </div>
+              </section>
+
+              {/* Build & deploy settings */}
+              <section className="bg-white border border-[#ddd] rounded-[3px]">
+                <div className="px-5 py-3 border-b border-[#ddd] bg-[#f5f5f5]">
+                  <h3 className="text-sm font-bold text-[#333]">Build &amp; deploy</h3>
+                  <p className="text-xs text-[#777] mt-0.5">Commands and runtime configuration</p>
+                </div>
+                <div className="p-5 space-y-5">
+                  <div>
+                    <label className="block text-xs font-bold text-[#555] mb-1.5">Build command</label>
+                    <input
+                      defaultValue="npm run build"
+                      className="w-full rounded-[3px] border border-[#ccc] px-3 py-2 text-sm font-mono focus:outline-none focus:border-[#337ab7]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-[#555] mb-1.5">Start command</label>
+                    <input
+                      defaultValue="npm run start"
+                      className="w-full rounded-[3px] border border-[#ccc] px-3 py-2 text-sm font-mono focus:outline-none focus:border-[#337ab7]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-[#555] mb-1.5">Node version</label>
+                    <input
+                      defaultValue="20.x"
+                      className="w-full rounded-[3px] border border-[#ccc] px-3 py-2 text-sm focus:outline-none focus:border-[#337ab7]"
+                    />
+                  </div>
+                  <div className="pt-2">
+                    <Button size="md" variant="secondary">Trigger rebuild</Button>
+                  </div>
+                </div>
+              </section>
+            </div>
+
+            {/* Danger zone */}
+            <section className="bg-white border border-[#d9534f] rounded-[3px]">
+              <div className="px-5 py-3 border-b border-[#f5c6c5] bg-[#fdf5f5]">
+                <h3 className="text-sm font-bold text-[#d9534f]">Danger zone</h3>
+                <p className="text-xs text-[#777] mt-0.5">These actions are irreversible. Proceed with caution.</p>
+              </div>
+              <div className="p-5 flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-sm font-bold text-[#333]">Delete this project</p>
+                  <p className="text-xs text-[#777] mt-0.5">Permanently removes all deployments, logs, and configuration.</p>
+                </div>
+                <Button variant="danger" size="md">Delete project</Button>
+              </div>
+            </section>
+          </div>
+        )}
+
       </main>
-    </>
+    </div>
   );
 }
