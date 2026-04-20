@@ -32,9 +32,7 @@ export default function ProjectDetailPage({ params, searchParams }: Params) {
     ? (searchParams.tab as Tab)
     : "overview");
 
-  const projectDeploys = deployments.filter(
-    (d) => d.projectId === project.id,
-  );
+  const projectDeploys = deployments.filter((d) => d.projectId === project.id);
   const projectIncidents = incidents.filter((i) => i.project === project.name);
   const projectEnvVars = envVars.filter((v) =>
     project.environments.includes(v.environment),
@@ -53,28 +51,27 @@ export default function ProjectDetailPage({ params, searchParams }: Params) {
         }
       />
 
-      <main className="flex-1 p-6 bg-gray-50 overflow-auto space-y-6">
-        <div className="flex flex-wrap items-center gap-3">
+      <main className="flex-1 p-4 bg-[#f5f5f5] overflow-auto">
+        <div className="bg-white border border-[#ddd] rounded-[3px] px-4 py-3 mb-4 flex flex-wrap items-center gap-3">
           <Badge tone={statusTone(project.status)}>{project.status}</Badge>
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-[#777]">
             {project.framework} · Owned by {project.owner} ({project.team})
           </span>
-          <span className="text-xs text-gray-500">
-            Uptime {project.uptime} · {project.deploymentsThisWeek} deploys this
-            week
+          <span className="text-xs text-[#777]">
+            Uptime {project.uptime} · {project.deploymentsThisWeek} deploys this week
           </span>
         </div>
 
-        <div className="border-b border-gray-200">
-          <nav className="flex gap-6">
+        <div className="border-b border-[#ddd] mb-4 bg-white">
+          <nav className="flex gap-0">
             {TABS.map((t) => (
               <Link
                 key={t}
                 href={`/projects/${project.slug}?tab=${t}`}
-                className={`text-sm py-2 -mb-px border-b-2 capitalize ${
+                className={`text-sm py-2 px-4 capitalize border-b-2 no-underline ${
                   tab === t
-                    ? "border-indigo-600 text-indigo-700 font-medium"
-                    : "border-transparent text-gray-600 hover:text-gray-900"
+                    ? "border-[#337ab7] text-[#337ab7] font-bold"
+                    : "border-transparent text-[#555] hover:text-[#333]"
                 }`}
               >
                 {t}
@@ -84,29 +81,30 @@ export default function ProjectDetailPage({ params, searchParams }: Params) {
         </div>
 
         {tab === "overview" && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div className="lg:col-span-2 space-y-4">
               <Card title="Deployment timeline" padded={false}>
-                <ul className="divide-y divide-gray-100">
+                <ul>
                   {projectDeploys.length === 0 && (
-                    <li className="px-5 py-4 text-sm text-gray-500">
+                    <li className="px-4 py-3 text-sm text-[#777]">
                       No deployments yet.
                     </li>
                   )}
-                  {projectDeploys.map((d) => (
+                  {projectDeploys.map((d, i) => (
                     <li
                       key={d.id}
-                      className="px-5 py-3 flex items-center justify-between"
+                      className={`px-4 py-2.5 flex items-center justify-between border-t border-[#eee] ${i === 0 ? "border-t-0" : ""}`}
                     >
                       <div>
-                        <p className="text-sm font-medium text-gray-900">
-                          {d.commit} — {d.message}
+                        <p className="text-sm text-[#333]">
+                          <span className="font-mono text-xs text-[#666]">{d.commit}</span>
+                          {"  "}{d.message}
                         </p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-[#777]">
                           {d.author} · {d.branch} · {d.timestamp}
                         </p>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1.5">
                         <Badge tone="gray">{d.environment}</Badge>
                         <Badge tone={statusTone(d.status)}>{d.status}</Badge>
                       </div>
@@ -117,28 +115,24 @@ export default function ProjectDetailPage({ params, searchParams }: Params) {
 
               <Card title="Recent alerts" padded={false}>
                 {projectIncidents.length === 0 ? (
-                  <div className="px-5 py-6 text-sm text-gray-500">
+                  <div className="px-4 py-4 text-sm text-[#777]">
                     No recent alerts for this project.
                   </div>
                 ) : (
-                  <ul className="divide-y divide-gray-100">
-                    {projectIncidents.map((i) => (
+                  <ul>
+                    {projectIncidents.map((i, idx) => (
                       <li
                         key={i.id}
-                        className="px-5 py-3 flex items-center justify-between"
+                        className={`px-4 py-2.5 flex items-center justify-between border-t border-[#eee] ${idx === 0 ? "border-t-0" : ""}`}
                       >
                         <div>
-                          <p className="text-sm font-medium text-gray-900">
-                            {i.title}
-                          </p>
-                          <p className="text-xs text-gray-500">
+                          <p className="text-sm text-[#333]">{i.title}</p>
+                          <p className="text-xs text-[#777]">
                             Opened {i.openedAt} · {i.assignee}
                           </p>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <Badge tone={statusTone(i.severity)}>
-                            {i.severity}
-                          </Badge>
+                        <div className="flex items-center gap-1.5">
+                          <Badge tone={statusTone(i.severity)}>{i.severity}</Badge>
                           <Badge tone={statusTone(i.status)}>{i.status}</Badge>
                         </div>
                       </li>
@@ -148,49 +142,44 @@ export default function ProjectDetailPage({ params, searchParams }: Params) {
               </Card>
             </div>
 
-            <div className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-white border border-gray-200 rounded-lg p-4">
-                  <p className="text-xs text-gray-500">Uptime (30d)</p>
-                  <p className="text-xl font-bold text-gray-900 mt-1">
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-white border border-[#ddd] rounded-[3px] p-3">
+                  <p className="text-xs text-[#777]">Uptime (30d)</p>
+                  <p className="text-lg font-bold text-[#333] mt-0.5">
                     {project.uptime}
                   </p>
                 </div>
-                <div className="bg-white border border-gray-200 rounded-lg p-4">
-                  <p className="text-xs text-gray-500">Deploys / wk</p>
-                  <p className="text-xl font-bold text-gray-900 mt-1">
+                <div className="bg-white border border-[#ddd] rounded-[3px] p-3">
+                  <p className="text-xs text-[#777]">Deploys / wk</p>
+                  <p className="text-lg font-bold text-[#333] mt-0.5">
                     {project.deploymentsThisWeek}
                   </p>
                 </div>
-                <div className="bg-white border border-gray-200 rounded-lg p-4">
-                  <p className="text-xs text-gray-500">Avg deploy</p>
-                  <p className="text-xl font-bold text-gray-900 mt-1">
-                    1m 42s
-                  </p>
+                <div className="bg-white border border-[#ddd] rounded-[3px] p-3">
+                  <p className="text-xs text-[#777]">Avg deploy</p>
+                  <p className="text-lg font-bold text-[#333] mt-0.5">1m 42s</p>
                 </div>
-                <div className="bg-white border border-gray-200 rounded-lg p-4">
-                  <p className="text-xs text-gray-500">Open incidents</p>
-                  <p className="text-xl font-bold text-gray-900 mt-1">
-                    {
-                      projectIncidents.filter((i) => i.status !== "resolved")
-                        .length
-                    }
+                <div className="bg-white border border-[#ddd] rounded-[3px] p-3">
+                  <p className="text-xs text-[#777]">Open incidents</p>
+                  <p className="text-lg font-bold text-[#333] mt-0.5">
+                    {projectIncidents.filter((i) => i.status !== "resolved").length}
                   </p>
                 </div>
               </div>
 
               <Card title="Environment variables" padded={false}>
-                <ul className="divide-y divide-gray-100 text-sm">
-                  {projectEnvVars.slice(0, 6).map((v) => (
+                <ul className="text-sm">
+                  {projectEnvVars.slice(0, 6).map((v, i) => (
                     <li
                       key={`${v.key}-${v.environment}`}
-                      className="px-5 py-2.5 flex items-center justify-between gap-3"
+                      className={`px-4 py-2 flex items-center justify-between gap-3 border-t border-[#eee] ${i === 0 ? "border-t-0" : ""}`}
                     >
                       <div className="min-w-0">
-                        <p className="font-mono text-xs text-gray-900 truncate">
+                        <p className="font-mono text-xs text-[#333] truncate">
                           {v.key}
                         </p>
-                        <p className="font-mono text-xs text-gray-500 truncate">
+                        <p className="font-mono text-xs text-[#777] truncate">
                           {v.value}
                         </p>
                       </div>
@@ -198,12 +187,9 @@ export default function ProjectDetailPage({ params, searchParams }: Params) {
                     </li>
                   ))}
                 </ul>
-                <div className="px-5 py-3 border-t border-gray-100">
-                  <a
-                    href="#"
-                    className="text-xs font-medium text-indigo-600 hover:text-indigo-800"
-                  >
-                    Manage all variables →
+                <div className="px-4 py-2 border-t border-[#eee]">
+                  <a href="#" className="text-xs text-[#337ab7] hover:underline">
+                    Manage all variables
                   </a>
                 </div>
               </Card>
@@ -214,29 +200,34 @@ export default function ProjectDetailPage({ params, searchParams }: Params) {
         {tab === "deployments" && (
           <Card title="All deployments" padded={false}>
             <table className="w-full text-sm">
-              <thead className="bg-gray-50 text-gray-500 text-xs uppercase tracking-wide">
+              <thead className="bg-[#f9f9f9] text-[11px] uppercase text-[#777]">
                 <tr>
-                  <th className="text-left px-5 py-2 font-medium">Commit</th>
-                  <th className="text-left px-5 py-2 font-medium">Message</th>
-                  <th className="text-left px-5 py-2 font-medium">Env</th>
-                  <th className="text-left px-5 py-2 font-medium">Status</th>
-                  <th className="text-left px-5 py-2 font-medium">Duration</th>
-                  <th className="text-left px-5 py-2 font-medium">When</th>
+                  <th className="text-left px-4 py-1.5 font-normal">Commit</th>
+                  <th className="text-left px-4 py-1.5 font-normal">Message</th>
+                  <th className="text-left px-4 py-1.5 font-normal">Env</th>
+                  <th className="text-left px-4 py-1.5 font-normal">Status</th>
+                  <th className="text-left px-4 py-1.5 font-normal">Duration</th>
+                  <th className="text-left px-4 py-1.5 font-normal">When</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
-                {projectDeploys.map((d) => (
-                  <tr key={d.id}>
-                    <td className="px-5 py-3 font-mono text-xs text-gray-700">
+              <tbody>
+                {projectDeploys.map((d, i) => (
+                  <tr
+                    key={d.id}
+                    className={`border-t border-[#eee] ${i % 2 === 1 ? "bg-[#f9f9f9]" : ""}`}
+                  >
+                    <td className="px-4 py-2 font-mono text-xs text-[#666]">
                       {d.commit}
                     </td>
-                    <td className="px-5 py-3 text-gray-900">{d.message}</td>
-                    <td className="px-5 py-3 text-gray-700">{d.environment}</td>
-                    <td className="px-5 py-3">
+                    <td className="px-4 py-2 text-[#333]">{d.message}</td>
+                    <td className="px-4 py-2 text-[#555]">{d.environment}</td>
+                    <td className="px-4 py-2">
                       <Badge tone={statusTone(d.status)}>{d.status}</Badge>
                     </td>
-                    <td className="px-5 py-3 text-gray-700">{d.duration}</td>
-                    <td className="px-5 py-3 text-gray-500">{d.timestamp}</td>
+                    <td className="px-4 py-2 text-[#555]">{d.duration}</td>
+                    <td className="px-4 py-2 text-xs text-[#777]">
+                      {d.timestamp}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -246,14 +237,14 @@ export default function ProjectDetailPage({ params, searchParams }: Params) {
 
         {tab === "logs" && (
           <Card title="Service logs" padded={false}>
-            <div className="bg-gray-900 text-gray-100 font-mono text-xs p-4 rounded-b-lg max-h-[500px] overflow-auto">
+            <div className="bg-[#2b2b2b] text-[#ddd] font-mono text-xs p-3 max-h-[500px] overflow-auto">
               {Array.from({ length: 30 }).map((_, i) => (
-                <div key={i} className="flex gap-3 py-0.5">
-                  <span className="text-gray-500">
+                <div key={i} className="flex gap-2 py-0.5">
+                  <span className="text-[#999]">
                     10:4{(i % 10).toString()}:{(i * 3) % 60}
                   </span>
-                  <span className="uppercase w-10 text-blue-400">info</span>
-                  <span className="text-indigo-300">[{project.slug}]</span>
+                  <span className="uppercase w-10 text-[#5bc0de]">info</span>
+                  <span className="text-[#5bc0de]">[{project.slug}]</span>
                   <span>
                     {i % 7 === 0
                       ? `Handled request ${i * 11} in ${42 + (i % 5)}ms`
@@ -266,34 +257,28 @@ export default function ProjectDetailPage({ params, searchParams }: Params) {
         )}
 
         {tab === "settings" && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <Card title="General">
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <div>
-                  <label className="text-xs font-medium text-gray-700">
-                    Project name
-                  </label>
+                  <label className="text-xs text-[#555]">Project name</label>
                   <input
                     defaultValue={project.name}
-                    className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                    className="mt-1 w-full rounded-[3px] border border-[#ccc] px-2 py-1 text-sm"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-gray-700">
-                    Framework
-                  </label>
+                  <label className="text-xs text-[#555]">Framework</label>
                   <input
                     defaultValue={project.framework}
-                    className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                    className="mt-1 w-full rounded-[3px] border border-[#ccc] px-2 py-1 text-sm"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-gray-700">
-                    Owning team
-                  </label>
+                  <label className="text-xs text-[#555]">Owning team</label>
                   <input
                     defaultValue={project.team}
-                    className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                    className="mt-1 w-full rounded-[3px] border border-[#ccc] px-2 py-1 text-sm"
                   />
                 </div>
                 <Button size="sm">Save changes</Button>
@@ -301,32 +286,26 @@ export default function ProjectDetailPage({ params, searchParams }: Params) {
             </Card>
 
             <Card title="Build & deploy">
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <div>
-                  <label className="text-xs font-medium text-gray-700">
-                    Build command
-                  </label>
+                  <label className="text-xs text-[#555]">Build command</label>
                   <input
                     defaultValue="npm run build"
-                    className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm font-mono"
+                    className="mt-1 w-full rounded-[3px] border border-[#ccc] px-2 py-1 text-sm font-mono"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-gray-700">
-                    Start command
-                  </label>
+                  <label className="text-xs text-[#555]">Start command</label>
                   <input
                     defaultValue="npm run start"
-                    className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm font-mono"
+                    className="mt-1 w-full rounded-[3px] border border-[#ccc] px-2 py-1 text-sm font-mono"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-gray-700">
-                    Node version
-                  </label>
+                  <label className="text-xs text-[#555]">Node version</label>
                   <input
                     defaultValue="20.x"
-                    className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                    className="mt-1 w-full rounded-[3px] border border-[#ccc] px-2 py-1 text-sm"
                   />
                 </div>
                 <Button size="sm" variant="secondary">Trigger rebuild</Button>

@@ -11,45 +11,45 @@ export default function ActivityFeed({ deployments }: Props) {
     <Card
       title="Recent deployments"
       action={
-        <a href="#" className="text-xs font-medium text-indigo-600 hover:text-indigo-800">
+        <a href="#" className="text-xs text-[#337ab7] hover:underline">
           View all
         </a>
       }
       padded={false}
     >
-      <ul className="divide-y divide-gray-100">
-        {deployments.map((d) => (
-          <li key={d.id} className="flex items-center justify-between px-5 py-3">
-            <div className="flex items-start gap-3 min-w-0">
-              <div className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center text-xs font-semibold text-indigo-700 shrink-0">
-                {d.author
-                  .split(" ")
-                  .map((n) => n[0])
-                  .slice(0, 2)
-                  .join("")}
-              </div>
-              <div className="min-w-0">
-                <p className="text-sm text-gray-900 truncate">
-                  <span className="font-medium">{d.projectName}</span>
-                  <span className="text-gray-500"> · {d.commit}</span>
-                </p>
-                <p className="text-xs text-gray-500 truncate">
-                  {d.message} — by {d.author}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3 shrink-0">
-              <Badge tone={statusTone(d.environment === "production" ? "info" : "gray")}>
-                {d.environment}
-              </Badge>
-              <Badge tone={statusTone(d.status)}>{d.status}</Badge>
-              <span className="text-xs text-gray-500 w-24 text-right hidden md:inline">
+      <table className="w-full text-sm">
+        <thead className="text-[11px] uppercase text-[#777] bg-[#f9f9f9]">
+          <tr>
+            <th className="text-left px-4 py-1.5 font-normal">Project</th>
+            <th className="text-left px-4 py-1.5 font-normal">Commit</th>
+            <th className="text-left px-4 py-1.5 font-normal">Author</th>
+            <th className="text-left px-4 py-1.5 font-normal">Env</th>
+            <th className="text-left px-4 py-1.5 font-normal">Status</th>
+            <th className="text-right px-4 py-1.5 font-normal">When</th>
+          </tr>
+        </thead>
+        <tbody>
+          {deployments.map((d, i) => (
+            <tr
+              key={d.id}
+              className={`border-t border-[#eee] ${i % 2 === 1 ? "bg-[#f9f9f9]" : ""}`}
+            >
+              <td className="px-4 py-2 text-[#333]">{d.projectName}</td>
+              <td className="px-4 py-2 font-mono text-xs text-[#666]">
+                {d.commit}
+              </td>
+              <td className="px-4 py-2 text-[#555]">{d.author}</td>
+              <td className="px-4 py-2 text-[#555]">{d.environment}</td>
+              <td className="px-4 py-2">
+                <Badge tone={statusTone(d.status)}>{d.status}</Badge>
+              </td>
+              <td className="px-4 py-2 text-xs text-[#777] text-right">
                 {d.timestamp}
-              </span>
-            </div>
-          </li>
-        ))}
-      </ul>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </Card>
   );
 }

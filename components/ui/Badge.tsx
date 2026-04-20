@@ -16,19 +16,19 @@ interface Props {
 }
 
 const toneStyles: Record<Tone, string> = {
-  gray: "bg-gray-100 text-gray-700 border-gray-200",
-  green: "bg-green-50 text-green-700 border-green-200",
-  red: "bg-red-50 text-red-700 border-red-200",
-  yellow: "bg-yellow-50 text-yellow-700 border-yellow-200",
-  blue: "bg-blue-50 text-blue-700 border-blue-200",
-  indigo: "bg-indigo-50 text-indigo-700 border-indigo-200",
-  purple: "bg-purple-50 text-purple-700 border-purple-200",
+  gray: "bg-[#777] text-white",
+  green: "bg-[#5cb85c] text-white",
+  red: "bg-[#d9534f] text-white",
+  yellow: "bg-[#f0ad4e] text-white",
+  blue: "bg-[#5bc0de] text-white",
+  indigo: "bg-[#337ab7] text-white",
+  purple: "bg-[#5e548e] text-white",
 };
 
 export default function Badge({ children, tone = "gray", className = "" }: Props) {
   return (
     <span
-      className={`inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded border ${toneStyles[tone]} ${className}`}
+      className={`inline-flex items-center gap-1 px-2 py-0.5 text-[11px] font-bold rounded-full ${toneStyles[tone]} ${className}`}
     >
       {children}
     </span>

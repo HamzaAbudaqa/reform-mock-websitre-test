@@ -12,10 +12,8 @@ const plans = [
       "Community support",
       "7-day log retention",
     ],
-    cta: "Get Started",
+    cta: "Get started",
     highlight: false,
-    priceColor: "text-green-600",
-    border: "border-green-400",
   },
   {
     name: "Team",
@@ -29,10 +27,8 @@ const plans = [
       "30-day log retention",
       "Slack + email alerts",
     ],
-    cta: "Start Free Trial!",
+    cta: "Start free trial",
     highlight: true,
-    priceColor: "text-red-600",
-    border: "border-red-600",
   },
   {
     name: "Enterprise",
@@ -46,83 +42,47 @@ const plans = [
       "Audit logs",
       "Custom retention",
     ],
-    cta: "Contact Sales",
+    cta: "Contact sales",
     highlight: false,
-    priceColor: "text-purple-600",
-    border: "border-purple-400",
   },
 ];
 
 export default function Pricing() {
   return (
-    <section
-      id="pricing"
-      className="py-20 bg-gradient-to-b from-yellow-100 to-pink-100 border-t-8 border-b-8 border-red-600 relative"
-    >
-      <div className="max-w-6xl mx-auto px-6 relative">
-        <div className="text-center mb-12">
-          <p className="text-sm font-black text-red-600 uppercase tracking-[0.4em] blink">
-            $$$ PRICING $$$
+    <section id="pricing" className="py-14 bg-white border-b border-[#e7e7e7]">
+      <div className="max-w-6xl mx-auto px-4">
+        <div className="text-center mb-10">
+          <h2 className="text-2xl font-bold text-[#222]">Pricing</h2>
+          <p className="mt-2 text-sm text-[#777]">
+            Start free. Upgrade as you grow.
           </p>
-          <h2 className="mt-2 text-5xl font-black italic [text-shadow:3px_3px_0_rgba(236,72,153,0.5)]">
-            <span className="bg-yellow-300 px-3 inline-block rotate-[-1deg] border-4 border-red-600">
-              SIMPLE
-            </span>{" "}
-            Transparent Pricing!
-          </h2>
-          <p className="mt-4 text-gray-800 font-sans text-lg">
-            Start free, upgrade as your team grows.
-          </p>
-          <div className="mt-3 inline-block bg-red-500 text-white font-black uppercase text-sm px-4 py-1 tracking-widest rotate-[-2deg] border-4 border-yellow-300 shadow-[4px_4px_0_rgba(0,0,0,0.35)] blink">
-            🔥 SAVE 50% — LIMITED TIME! 🔥
-          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {plans.map((p) => (
             <div
               key={p.name}
-              className={`relative bg-white p-7 flex flex-col ${
-                p.highlight
-                  ? "border-[6px] border-red-600 shadow-[8px_8px_0_rgba(236,72,153,0.8)] rounded-md scale-[1.05] z-10 bg-gradient-to-b from-yellow-50 to-white"
-                  : `border-4 ${p.border} rounded shadow-[4px_4px_0_rgba(0,0,0,0.25)]`
+              className={`bg-white p-5 flex flex-col rounded-[3px] border ${
+                p.highlight ? "border-[#337ab7]" : "border-[#ddd]"
               }`}
             >
               {p.highlight && (
-                <>
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-red-600 text-white text-xs font-black uppercase tracking-widest px-4 py-1.5 rounded-sm border-2 border-yellow-300 shadow blink">
-                    ★ MOST POPULAR ★
-                  </div>
-                  <div className="absolute -top-6 -right-6 h-20 w-20 rotate-[12deg] bg-yellow-300 border-4 border-red-600 text-red-700 font-black text-xs uppercase flex flex-col items-center justify-center text-center leading-tight shadow-[3px_3px_0_rgba(0,0,0,0.3)]">
-                    SAVE
-                    <span className="text-lg">50%</span>
-                  </div>
-                </>
+                <div className="-mx-5 -mt-5 mb-4 px-5 py-1.5 bg-[#337ab7] text-white text-xs text-center font-bold rounded-t-[3px]">
+                  Most popular
+                </div>
               )}
-              <div className="mb-4">
-                <h3 className="text-3xl font-black text-gray-900 italic">
-                  {p.name}
-                </h3>
-                <p className="text-sm text-gray-700 mt-1 font-sans">
-                  {p.description}
-                </p>
+              <h3 className="text-lg font-bold text-[#333]">{p.name}</h3>
+              <p className="text-xs text-[#777] mt-1">{p.description}</p>
+
+              <div className="mt-4 mb-4 pb-4 border-b border-[#eee]">
+                <span className="text-3xl font-bold text-[#333]">{p.price}</span>
+                <span className="text-sm text-[#777]">{p.cadence}</span>
               </div>
 
-              <div className="mb-6 pb-4 border-b-4 border-dashed border-gray-300">
-                <span className={`text-6xl font-black italic ${p.priceColor} [text-shadow:2px_2px_0_rgba(0,0,0,0.15)]`}>
-                  {p.price}
-                </span>
-                <span className="text-base text-gray-600 font-black">
-                  {p.cadence}
-                </span>
-              </div>
-
-              <ul className="space-y-2.5 text-sm text-gray-900 mb-6 flex-1 font-sans">
+              <ul className="space-y-1.5 text-sm text-[#555] mb-5 flex-1">
                 {p.features.map((f) => (
                   <li key={f} className="flex items-start gap-2">
-                    <span className="mt-0.5 text-green-600 font-black text-base">
-                      ✔
-                    </span>
+                    <span className="mt-0.5 text-[#5cb85c]">✓</span>
                     <span>{f}</span>
                   </li>
                 ))}
@@ -133,7 +93,7 @@ export default function Pricing() {
                 fullWidth
                 variant={p.highlight ? "primary" : "secondary"}
               >
-                {p.cta} {p.highlight ? "➜" : ""}
+                {p.cta}
               </Button>
             </div>
           ))}

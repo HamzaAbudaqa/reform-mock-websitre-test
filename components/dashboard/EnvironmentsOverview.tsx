@@ -5,21 +5,21 @@ import { environmentsOverview } from "@/lib/mockData";
 export default function EnvironmentsOverview() {
   return (
     <Card title="Environments" padded={false}>
-      <ul className="divide-y divide-gray-100">
-        {environmentsOverview.map((e) => (
+      <ul>
+        {environmentsOverview.map((e, i) => (
           <li
             key={e.name}
-            className="flex items-center justify-between px-5 py-3"
+            className={`flex items-center justify-between px-4 py-2.5 border-t border-[#eee] ${i === 0 ? "border-t-0" : ""}`}
           >
             <div>
-              <p className="text-sm font-medium text-gray-900 capitalize">
-                {e.name}
-              </p>
-              <p className="text-xs text-gray-500">
+              <p className="text-sm text-[#333] capitalize">{e.name}</p>
+              <p className="text-xs text-[#777]">
                 {e.projects} projects · last deploy {e.lastDeploy}
               </p>
             </div>
-            <Badge tone={statusTone(e.health === "Healthy" ? "healthy" : "degraded")}>
+            <Badge
+              tone={statusTone(e.health === "Healthy" ? "healthy" : "degraded")}
+            >
               {e.health}
             </Badge>
           </li>

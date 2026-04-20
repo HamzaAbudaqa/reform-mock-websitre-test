@@ -13,28 +13,28 @@ export default function DashboardPage() {
     <>
       <Header
         title="Dashboard"
-        subtitle="What's shipping across your projects right now."
+        subtitle="Overview of deployments across your projects."
         action={
           <Button size="sm" href="/projects">
-            + New deployment
+            New deployment
           </Button>
         }
       />
 
-      <main className="flex-1 p-6 bg-gray-50 space-y-6 overflow-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <main className="flex-1 p-4 bg-[#f5f5f5] space-y-4 overflow-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {kpis.map((k) => (
             <KpiCard key={k.label} {...k} />
           ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="lg:col-span-2 space-y-4">
             <ActivityFeed deployments={deployments.slice(0, 6)} />
             <LogsPreview logs={logs} />
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-4">
             <IncidentsList incidents={incidents} />
             <EnvironmentsOverview />
             <TeamWidget members={team.slice(0, 5)} />

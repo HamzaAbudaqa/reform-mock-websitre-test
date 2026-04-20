@@ -17,17 +17,15 @@ export default function Card({
 }: Props) {
   return (
     <div
-      className={`bg-white border-4 border-black rounded-sm shadow-[5px_5px_0_rgba(0,0,0,0.35)] ${className}`}
+      className={`bg-white border border-[#ddd] rounded-[3px] ${className}`}
     >
       {title && (
-        <div className="flex items-center justify-between px-5 py-3 border-b-4 border-black bg-gradient-to-r from-yellow-200 via-pink-200 to-purple-200">
-          <h3 className="text-xs font-black text-gray-900 uppercase tracking-[0.2em] italic">
-            ★ {title}
-          </h3>
+        <div className="flex items-center justify-between px-4 py-2 border-b border-[#ddd] bg-[#f5f5f5]">
+          <h3 className="text-sm font-bold text-[#333]">{title}</h3>
           {action}
         </div>
       )}
-      <div className={padded ? "p-5" : ""}>{children}</div>
+      <div className={padded ? "p-4" : ""}>{children}</div>
     </div>
   );
 }
